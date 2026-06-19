@@ -1,2 +1,1 @@
-# Richenia-Shop
-Responsive Ecommerce Shop
+Just a Simple Ecommerce Shop
