@@ -2,19 +2,24 @@
 /**
  * config/app.php
  *
- * Auto-detects the project's base URL so assets and AJAX calls work
- * regardless of how deep the project sits inside htdocs.
- *
- * Example path:  C:\xampp\htdocs\Project_Shop\richenia\index.php
- * SCRIPT_NAME:   /Project_Shop/richenia/index.php
- * BASE_URL:       /Project_Shop/richenia/
- *
- * You never need to edit this file — it adapts automatically.
+ * BASE_URL is fixed to root ('/') because the app is served from the
+ * domain root on Vercel via the api/index.php front controller — there's
+ * no nested folder path to auto-detect anymore, unlike the old XAMPP
+ * setup where the project could sit at /Project_Shop/richenia/.
  */
 
 if (!defined('BASE_URL')) {
-    // Normalize backslashes (Windows) and strip the filename
-    $scriptDir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
-    // Ensure it always ends with exactly one slash
-    define('BASE_URL', rtrim($scriptDir, '/') . '/');
+    define('BASE_URL', '/');
+}
+
+// --- Database-backed sessions ---
+// Must run before any output and before session_start() is called
+// anywhere else in the app. This file is required first by every page,
+// so this is the right place for it.
+require_once __DIR__ . '/database.php';
+require_once __DIR__ . '/DbSessionHandler.php';
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_set_save_handler(new DbSessionHandler(Database::getConnection()), true);
+    session_start();
 }
