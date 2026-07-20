@@ -1,4 +1,4 @@
--- =========================================================
+
 -- Richenia — Database Migration & Seed Data
 -- Run this once in phpMyAdmin (Import tab) or via:
 --   mysql -u root -p < schema.sql
